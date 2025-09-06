@@ -3,7 +3,7 @@ import type { FormEvent } from 'react';
 import axios from 'axios';
 
 // --- Environment Variable Setup ---
-const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
+const apiUrl = process.env.REACT_APP_API_URL;
 
 // Axios instance configured to communicate with the backend API.
 const apiClient = axios.create({
