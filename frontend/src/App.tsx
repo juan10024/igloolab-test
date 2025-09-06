@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import type { FormEvent } from 'react'; // Corrected type-only import
+import type { FormEvent } from 'react';
 import axios from 'axios';
+
+// --- Environment Variable Setup ---
+const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
 
 // Axios instance configured to communicate with the backend API.
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3000/api', 
+  baseURL: apiUrl,
 });
 
 // Interface defining the structure of a Product object.
@@ -28,6 +31,43 @@ const Notification: React.FC<{ message: string; type: 'success' | 'error' }> = (
 };
 
 /**
+ * A stylish confirmation modal to replace window.confirm.
+ */
+const ConfirmModal: React.FC<{
+  isOpen: boolean;
+  title: string;
+  message: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}> = ({ isOpen, title, message, onConfirm, onCancel }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+      <div className="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md text-center">
+        <h3 className="text-2xl font-bold text-white mb-4">{title}</h3>
+        <p className="text-gray-300 mb-6">{message}</p>
+        <div className="flex justify-center gap-4">
+          <button
+            onClick={onCancel}
+            className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-300"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-300"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+/**
  * Renders a single product item card with product details and a delete button.
  */
 const ProductItem: React.FC<{ product: Product; onDelete: (id: number) => void }> = ({ product, onDelete }) => (
@@ -49,7 +89,11 @@ const ProductItem: React.FC<{ product: Product; onDelete: (id: number) => void }
 /**
  * A form for adding a new product.
  */
-const AddProductForm: React.FC<{ onAdd: (product: Omit<Product, 'id'>) => void, isLoading: boolean }> = ({ onAdd, isLoading }) => {
+const AddProductForm: React.FC<{
+    onAdd: (product: Omit<Product, 'id'>) => void;
+    isLoading: boolean;
+    showNotification: (message: string, type: 'error' | 'success') => void;
+}> = ({ onAdd, isLoading, showNotification }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
@@ -57,7 +101,8 @@ const AddProductForm: React.FC<{ onAdd: (product: Omit<Product, 'id'>) => void, 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !description.trim() || !price) {
-      alert("Please fill out all fields.");
+      // Replaced window.alert with the more elegant Notification component
+      showNotification("Please fill out all fields.", "error");
       return;
     }
     onAdd({ name, description, price: parseFloat(price) });
@@ -111,6 +156,11 @@ function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
+  // State for the confirmation modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productIdToDelete, setProductIdToDelete] = useState<number | null>(null);
+
+
   const showNotification = (message: string, type: 'success' | 'error') => {
     setNotification({ message, type });
     setTimeout(() => setNotification(null), 3000); // Auto-hide after 3 seconds
@@ -147,20 +197,31 @@ function App() {
         setIsSubmitting(false);
     }
   };
+  
+  // Opens the modal to ask for confirmation
+  const handleDeleteRequest = (id: number) => {
+    setProductIdToDelete(id);
+    setIsModalOpen(true);
+  };
 
-  const handleDeleteProduct = async (id: number) => {
-    // A simple custom modal could replace this for a better UX
-    if (window.confirm("Are you sure you want to delete this product?")) {
-        try {
-            await apiClient.delete(`/products/${id}`);
-            setProducts(prevProducts => prevProducts.filter(p => p.id !== id));
-            showNotification("Product deleted successfully.", "success");
-        } catch (error) {
-            console.error("Error deleting product:", error);
-            showNotification("Error deleting product.", "error");
-        }
+  // The actual deletion logic, triggered by the modal's confirm button
+  const handleConfirmDelete = async () => {
+    if (productIdToDelete === null) return;
+
+    try {
+        await apiClient.delete(`/products/${productIdToDelete}`);
+        setProducts(prevProducts => prevProducts.filter(p => p.id !== productIdToDelete));
+        showNotification("Product deleted successfully.", "success");
+    } catch (error) {
+        console.error("Error deleting product:", error);
+        showNotification("Error deleting product.", "error");
+    } finally {
+        // Close modal and reset state
+        setIsModalOpen(false);
+        setProductIdToDelete(null);
     }
   };
+
 
   return (
     <div className="bg-gray-900 min-h-screen text-gray-200 font-sans">
@@ -174,7 +235,7 @@ function App() {
 
         <main className="grid md:grid-cols-3 gap-8">
           <div className="md:col-span-1">
-            <AddProductForm onAdd={handleAddProduct} isLoading={isSubmitting} />
+            <AddProductForm onAdd={handleAddProduct} isLoading={isSubmitting} showNotification={showNotification} />
           </div>
           <div className="md:col-span-2">
             <h2 className="text-2xl font-bold text-white mb-4">Product List</h2>
@@ -184,7 +245,7 @@ function App() {
             ) : products.length > 0 ? (
               <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-6">
                 {products.map(product => (
-                  <ProductItem key={product.id} product={product} onDelete={handleDeleteProduct} />
+                  <ProductItem key={product.id} product={product} onDelete={handleDeleteRequest} />
                 ))}
               </div>
             ) : (
@@ -193,6 +254,17 @@ function App() {
           </div>
         </main>
       </div>
+      
+      <ConfirmModal
+        isOpen={isModalOpen}
+        title="Confirm Deletion"
+        message="Are you sure you want to delete this product? This action cannot be undone."
+        onConfirm={handleConfirmDelete}
+        onCancel={() => {
+            setIsModalOpen(false);
+            setProductIdToDelete(null);
+        }}
+      />
     </div>
   );
 }
