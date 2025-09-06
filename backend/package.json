@@ -7,7 +7,8 @@
     "dev": "npx ts-node-dev --respawn --transpile-only --debug ./src/index.ts",
     "build": "tsc",
     "start": "node ./dist/index.js",
-    "typeorm": "typeorm-ts-node-commonjs"
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migration:run": "npm run typeorm -- migration:run --dataSource src/data-source.ts"
   },
   "keywords": [],
   "author": "",
