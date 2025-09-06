@@ -5,7 +5,7 @@ function runMigrations() {
     console.log('Running migrations (via npx typeorm-ts-node-commonjs migration:run)...');
 
     // Ejecuta la CLI y conecta la salida al stdout/stderr
-    const child = exec('npx typeorm-ts-node-commonjs migration:run', {
+    const child = exec('npx typeorm-ts-node-commonjs migration:run --dataSource src/data-source.ts', {
       maxBuffer: 1024 * 1024 * 20
     });
 
