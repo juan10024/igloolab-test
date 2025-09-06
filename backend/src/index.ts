@@ -3,7 +3,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import { AppDataSource } from './data-source'
-import productRoutes from '../src/routes/product.routes';
+import productRoutes from './routes/product.routes';
 
 /**
  * Main application function.
