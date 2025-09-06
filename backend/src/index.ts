@@ -36,9 +36,13 @@ const main = async () => {
 
     // --- Error Handling Middleware ---
     // This middleware catches any errors that occur in the route handlers
-    app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-        console.error(err.stack);
-        res.status(500).json({ message: 'Something went wrong on the server.' });
+    app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+        console.error('Unhandled error:', err && (err.stack || err));
+        const isProd = process.env.NODE_ENV === 'production';
+        res.status(500).json({
+            message: isProd ? 'Something went wrong on the server.' : (err?.message || 'Unknown error'),
+            ...(isProd ? {} : { stack: err?.stack })
+        });
     });
 
     const PORT = process.env.PORT || 3000;

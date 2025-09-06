@@ -25,6 +25,7 @@ export const getProducts = async (req: Request, res: Response): Promise<Response
  */
 export const createProduct = async (req: Request, res: Response): Promise<Response> => {
     const { name, description, price } = req.body;
+    console.log('Incoming create product request body:', req.body);
 
     try {
         const product = new Product();
