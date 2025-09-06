@@ -1,12 +1,12 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx ts-node-dev --respawn --transpile-only --debug ./src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node ./src/index.ts"
   },
   "keywords": [],
   "author": "",
