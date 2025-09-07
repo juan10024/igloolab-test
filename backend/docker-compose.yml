@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Servicio de la aplicación Node.js
+  # Node.js Application Service
   app:
     build: .
     ports:
@@ -15,7 +15,7 @@ services:
       - db
     command: npm run dev
 
-  # Servicio de la base de datos PostgreSQL
+  # PostgreSQL database service
   db:
     image: postgres:15
     restart: always
