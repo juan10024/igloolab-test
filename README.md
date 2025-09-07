@@ -41,6 +41,8 @@ Proyecto Full Stack desarrollado como parte de la prueba técnica para la posici
 
 ## 🚀 Cómo Empezar (Proyecto ya Desplegado en Ambiente de Pre-Producción)
 
+Puedes revisar el funcionamiento del proyecto en este punto, sin necesidad de configuraciones adicionales ni descargas
+
 Despliegue del front-end en Netlify App
 
 Despliegue del backend en Render usando entorno Docker
@@ -92,7 +94,7 @@ cp .env.example .env
 cp .env.example .env
 ```
 
-- Abre el archivo .env y copia los valores por defecto del archivo .env envíado al correo electrónico.
+- Abre el archivo .env y copia los valores por defecto del archivo **.env_config** envíado al correo electrónico.
 - Abrir Docker Desktop descargado previamente.
 - Luego, en la terminal ejecutar
 ```
@@ -127,10 +129,17 @@ npm install
 npm run dev
 ```
 
+### Configura la Base de Datos
+
+-  Primero, instala alguna herramienta para la conexión remota a la base de datos, puede ser:
+Extensión PostgreSQL para VSCode
+- Ingresar el nombre de host (como localhost), el usuario, la contraseña, y el número de puerto, datos especificados en el archivo recibido por correo electrónico **database-client-config**
+
 ¡Listo, ya puedes acceder a la aplicación! 🥳
 
 Abre tu navegador y visita http://localhost:5173.
 
 ¡Y eso es todo! Ahora deberías tener la aplicación completa ejecutándose localmente. El frontend en el puerto 5173 se comunicará con el backend que se ejecuta dentro de Docker en el puerto 3000.
+
 
 
