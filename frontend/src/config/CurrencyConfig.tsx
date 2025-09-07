@@ -1,4 +1,7 @@
-// This file centralizes currency configuration so it's easily scalable.
+/**
+ * @fileoverview This file centralizes currency configuration so it's easily scalable.
+ * @module config/CurrencyConfig
+ */
 
 export type Currency = 'USD' | 'COP';
 

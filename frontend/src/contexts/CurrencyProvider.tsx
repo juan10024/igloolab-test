@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Provide a Currency - COP or USD.
+ * @module contexts/CurrencyProvider
+ * @requires react
+ * @requires ../config/CurrencyConfig
+ */
+
 import React, { createContext, useState, useMemo, useEffect } from 'react';
 import type { Currency } from '../config/CurrencyConfig';
 

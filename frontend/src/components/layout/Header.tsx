@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Component for the application's header.
+ * @module components/layout/Header
+ * @requires react
+ * @requires ../../assets/logo.png
+ * @requires ../common/ThemeSwitcher
+ * @requires ./LaguageSwitcher
+ * @requires ./CurrencySwitcher
+ */
+
 import React from 'react';
 import { Trans } from 'react-i18next';
 import ThemeSwitcher from '../common/ThemeSwitcher';
@@ -21,7 +31,7 @@ const Header: React.FC = () => {
                     </a>
                 </div>
                 <div className="w-full sm:w-1/3 text-center">
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white whitespace-nowrap">
+                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white md:whitespace-nowrap">
                         <Trans i18nKey="main_title">
                             Product <span className="text-teal-500 dark:text-teal-400">Management</span>
                         </Trans>

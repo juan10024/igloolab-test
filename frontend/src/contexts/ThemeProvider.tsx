@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Provide a Dark/Light Theme Mode.
+ * @module contexts/ThemeProvider
+ * @requires react
+ */
+
 import React, { createContext, useState, useEffect, useMemo } from 'react';
 
 type Theme = 'dark' | 'light';

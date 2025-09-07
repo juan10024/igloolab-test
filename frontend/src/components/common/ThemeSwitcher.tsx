@@ -1,9 +1,14 @@
+/**
+ * @fileoverview Component that provides a UI for switching between light and dark themes.
+ * @module components/common/ThemeSwitcher
+ * @requires react
+ * @requires ../../hooks/useTheme
+ */
+
 import React from 'react';
 import { useTheme } from '../../hooks/useTheme';
 
-/**
-* A component that provides a UI for switching between light and dark themes.
-*/
+
 export const ThemeSwitcher: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
 

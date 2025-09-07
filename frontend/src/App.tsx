@@ -1,3 +1,17 @@
+/**
+ * @fileoverview The main component that orchestrates the entire application.
+ * @module App
+ * @requires react
+ * @requires ./components/product/AddProductForm
+ * @requires ./components/product/ProductList
+ * @requires ./components/layout/Header
+ * @requires ./components/common/Notification
+ * @requires ./components/common/ConfirmModal
+ * @requires ./hooks/useProducts
+ * @requires ./hooks/useI18n
+ * @requires ./hooks/useKeepAlive
+ */
+
 import AddProductForm from './components/product/AddProductForm';
 import ProductList from './components/product/ProductList';
 import Header from './components/layout/Header';

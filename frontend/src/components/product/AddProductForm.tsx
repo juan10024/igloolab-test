@@ -1,3 +1,11 @@
+/**
+ * @fileoverview A form for adding a new product, featuring intuitive, real-time input validation.
+ * @module components/product/AddProductForm
+ * @requires react
+ * @requires ../../types
+ * @requires ../../hooks/useI18n
+ */
+
 import React, { useState } from 'react';
 import type { FocusEvent, FormEvent } from 'react';
 import type { Product, NotificationType } from '../../types';
@@ -14,9 +22,6 @@ type FormFields = 'name' | 'description' | 'price';
 type FormErrors = Partial<Record<FormFields, string>>;
 
 
-/**
- * A form for adding a new product, featuring intuitive, real-time input validation.
- */
 const AddProductForm: React.FC<AddProductFormProps> = ({ onAdd, isLoading }) => {
   const [formData, setFormData] = useState({ name: '', description: '', price: '' });
   const [errors, setErrors] = useState<FormErrors>({});

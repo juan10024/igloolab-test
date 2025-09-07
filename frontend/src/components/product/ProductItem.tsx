@@ -1,3 +1,12 @@
+/**
+ * @fileoverview Renders a single product card, displaying the price in the selected currency.
+ * @module components/product/ProductItem
+ * @requires react
+ * @requires ../../types
+ * @requires ../../hooks/useCurrency
+ * @requires ../../hooks/useI18n
+ */
+
 import React from 'react';
 import type { Product } from '../../types';
 import { useI18n } from '../../hooks/useI18n';
@@ -8,9 +17,7 @@ interface ProductItemProps {
   onDelete: (id: number) => void;
 }
 
-/**
-* Renders a single product card, displaying the price in the selected currency.
-*/
+
 const ProductItem: React.FC<ProductItemProps> = ({ product, onDelete }) => {
     const { t } = useI18n();
     const { formatPrice } = useCurrency();

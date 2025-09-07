@@ -1,10 +1,16 @@
+/**
+ * @fileoverview Component to change the application currency.
+ * @module components/layout/CurrencySwitcher
+ * @requires react
+ * @requires ../../config/CurrencyConfig
+ * @requires ../../hooks/useCurrency
+ */
+
 import React from 'react';
 import { useCurrency } from '../../hooks/useCurrency';
 import { currencies } from '../../config/CurrencyConfig';
 
-/**
- * Component to change the application currency.
- */
+
 export const CurrencySwitcher: React.FC = () => {
   const { currency, setCurrency } = useCurrency();
 

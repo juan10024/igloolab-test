@@ -1,8 +1,14 @@
+/**
+ * @fileoverview A simple notification component for displaying success or error messages.
+ * @module components/common/Notification
+ * @requires react
+ * @requires ../../types
+ */
+
 import React from 'react';
 import type { NotificationType } from '../../types';
 
 /**
-* A simple notification component for displaying success or error messages.
 * It's a "dumb" component that only renders the UI based on props.
 */
 const Notification: React.FC<NotificationType> = ({ message, type }) => {

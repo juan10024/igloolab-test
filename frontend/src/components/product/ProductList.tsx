@@ -1,3 +1,11 @@
+/**
+ * @fileoverview Renders the product list.Handles loading and empty states.
+ * @module components/product/ProductList
+ * @requires react
+ * @requires ../../types
+ * @requires ../../hooks/useI18n
+ */
+
 import React from 'react';
 import type { Product } from '../../types';
 import ProductItem from './ProductItem';
@@ -9,10 +17,7 @@ interface ProductListProps {
   onDelete: (id: number) => void;
 }
 
-/**
-* Renders the product list.
-* Handles loading and empty states.
-*/
+
 const ProductList: React.FC<ProductListProps> = ({ products, isLoading, onDelete }) => {
   const { t } = useI18n();
   

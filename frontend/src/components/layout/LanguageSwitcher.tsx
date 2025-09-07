@@ -1,9 +1,13 @@
+/**
+ * @fileoverview Component to change the application language.
+ * @module components/layout/LanguageSwitcher
+ * @requires react
+ * @requires ../../hooks/useI18n
+ */
+
 import React from 'react';
 import { useI18n } from '../../hooks/useI18n';
 
-/**
-* A component to change the application language.
-*/
 export const LanguageSwitcher: React.FC = () => {
   const { changeLanguage, currentLanguage } = useI18n();
 

@@ -1,4 +1,7 @@
-// This file centralizes all translation strings for the application.
+/**
+ * @fileoverview This file centralizes all translation strings for the application.
+ * @module transalations/index
+ */
 
 export const resources = {
   en: {

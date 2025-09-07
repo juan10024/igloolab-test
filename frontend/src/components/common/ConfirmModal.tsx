@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Component to change the application currency.
+ * @module components/common/ConfirmModal
+ * @requires react
+ * @requires ../../hooks/useI18n
+ */
+
 import React from 'react';
 import { useI18n } from '../../hooks/useI18n';
 
