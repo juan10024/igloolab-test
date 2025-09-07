@@ -1,12 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import apiClient from '../services/apiClient';
-import type { Product, NotificationType } from '../types/index';
+import type { Product, NotificationType } from '../types';
 import { useI18n } from './useI18n';
 
 /**
- * A custom hook to manage all product-related state and logic.
- * This encapsulates fetching, adding, and deleting products, as well as handling
- * loading states, notifications, and the confirmation modal.
+ * Hook personalizado para manejar toda la lógica de productos.
  */
 export const useProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -26,7 +24,6 @@ export const useProducts = () => {
     setIsLoading(true);
     try {
       const response = await apiClient.get<Product[]>('/products');
-
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);

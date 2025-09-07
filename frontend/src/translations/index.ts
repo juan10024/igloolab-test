@@ -14,6 +14,12 @@ export const resources = {
       "add_product_button": "Add Product",
       "adding_product_button": "Adding...",
       "form_error_fill_fields": "Please fill out all fields.",
+      // Validation
+      "validation_name_required": "Please complete the product name.",
+      "validation_description_required": "Please complete the description.",
+      "validation_price_required": "Please enter a price.",
+      "validation_name_invalid": "Name must be at least 4 characters and contain only letters.",
+      "validation_price_invalid": "Price must be a positive number.",
       // Product List
       "product_list_title": "Product List",
       "loading_products": "Loading products...",
@@ -46,6 +52,12 @@ export const resources = {
       "add_product_button": "Agregar Producto",
       "adding_product_button": "Agregando...",
       "form_error_fill_fields": "Por favor, complete todos los campos.",
+      // Validation
+      "validation_name_required": "Por favor completa el nombre del producto.",
+      "validation_description_required": "Por favor completa la descripción.",
+      "validation_price_required": "Por favor ingresa un precio.",
+      "validation_name_invalid": "El nombre debe tener al menos 4 caracteres y contener solo letras.",
+      "validation_price_invalid": "El precio debe ser un número positivo.",
       // Product List
       "product_list_title": "Lista de Productos",
       "loading_products": "Cargando productos...",
