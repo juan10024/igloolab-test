@@ -12,7 +12,7 @@ import { useKeepAlive } from './hooks/useKeepAlive';
 function App() {
   // Get the API base URL from environment variables.
   const apiUrl = import.meta.env.VITE_REACT_APP_URL;
-  const keepAliveUrl = `${apiUrl}/api/ping`;
+  const keepAliveUrl = `${apiUrl}/ping`;
 
   // Call the hook to start the keep-alive process.
   // It will run only once when the App component is mounted.

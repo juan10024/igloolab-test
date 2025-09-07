@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Repository } from 'typeorm';
-import { validate, isUUID } from 'class-validator';
+import { validate, isNumberString } from 'class-validator';
 import { AppDataSource } from '../data-source';
 import { Product } from '../entities/Product';
 
@@ -15,6 +15,7 @@ import { Product } from '../entities/Product';
  * @returns {Promise<Repository<Product>>} A promise that resolves to the Product repository.
  * @throws {Error} Throws an error if the repository cannot be obtained.
  */
+
 const getProductRepository = async (): Promise<Repository<Product>> => {
   try {
     if (!AppDataSource.isInitialized) {
@@ -35,8 +36,8 @@ const getProductRepository = async (): Promise<Repository<Product>> => {
  * @returns {string} The sanitized string.
  */
 const sanitizeInput = (input: string): string => {
-    if (typeof input !== 'string') return '';
-    return input.replace(/<[^>]*>?/gm, ''); // Removes HTML tags
+  if (typeof input !== 'string') return '';
+  return input.replace(/<[^>]*>?/gm, ''); // Removes HTML tags
 };
 
 
@@ -116,10 +117,10 @@ export const deleteProduct = async (req: Request, res: Response): Promise<Respon
     const { id } = req.params;
 
     // --- Security & Validation ---
-    // Validate that the ID is in the correct format (e.g., UUID) before querying the database.
+    // Validate that the ID is a numeric string before querying the database.
     // This prevents malformed requests from hitting the DB layer.
-    if (!isUUID(id)) {
-        return res.status(400).json({ message: 'Invalid ID format. A valid UUID is required.' });
+    if (!isNumberString(id)) {
+      return res.status(400).json({ message: 'Invalid ID format. A numeric ID is required.' });
     }
 
     const productRepository = await getProductRepository();
