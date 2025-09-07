@@ -4,33 +4,31 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx ts-node-dev --respawn --transpile-only --debug ./src/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only --debug ./src/index.ts",
     "build": "tsc",
     "start": "node ./dist/index.js",
     "typeorm": "typeorm-ts-node-commonjs",
-    "migration:run": "npm run typeorm -- migration:run --dataSource src/data-source.ts",
-    "deploy": "node migration-runner.js"
+    "migration:run": "npm run typeorm -- migration:run --dataSource src/data-source.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "class-validator": "^0.14.2",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "class-validator": "^0.14.1",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.2",
-    "express": "^5.1.0",
-    "pg": "^8.16.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.26",
-    "typeorm-ts-node-commonjs": "^0.3.20"
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3",
-    "@types/node": "^24.3.1",
-    "nodemon": "^3.1.10",
+    "@types/node": "^20.12.12",
+    "nodemon": "^3.1.0",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.4.5"
   }
 }
