@@ -8,6 +8,10 @@ import { Product } from './entities/Product';
  * This configuration sets up the connection to the PostgreSQL database
  * using environment variables for security and flexibility.
  */
+
+const isProd = process.env.NODE_ENV ;
+
+
 export const AppDataSource = new DataSource({
     type: "postgres",
     host: process.env.DB_HOST,
@@ -18,7 +22,7 @@ export const AppDataSource = new DataSource({
 
     synchronize: false,
     logging: false,
-    entities: [Product],
+    entities: isProd ? ['dist/entities/*.js'] : ['src/entities/*.ts'],
+    migrations: isProd ? ['dist/migrations/*.js'] : ['src/migrations/*.ts'],
     subscribers: [],
-    migrations: [],
 });
