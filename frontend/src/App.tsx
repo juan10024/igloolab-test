@@ -3,7 +3,7 @@ import type { FormEvent } from 'react';
 import axios from 'axios';
 
 // --- Environment Variable Setup ---
-const apiUrl = "https://igloolab-test.onrender.com/api";
+const apiUrl = import.meta.env.VITE_REACT_APP_URL;
 
 // Axios instance configured to communicate with the backend API.
 const apiClient = axios.create({
