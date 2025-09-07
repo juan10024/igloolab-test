@@ -17,17 +17,18 @@ Proyecto Full Stack desarrollado como parte de la prueba técnica para la posici
 
 
 ## ✨ Características
-Interfaz de Usuario Moderna: Creada con React y TypeScript, y estilizada con Tailwind CSS.
 
-Gestión de Productos: Añade, visualiza y elimina productos de forma dinámica.
+- **Interfaz de Usuario Moderna**: Creada con React y TypeScript, y estilizada con Tailwind CSS.
 
-Backend : API RESTful construida con Node.js, Express y TypeScript.
+- **Gestión de Productos**: Añade, visualiza y elimina productos de forma dinámica.
 
-Base de Datos Relacional: Persistencia de datos gestionada con PostgreSQL.
+- **Backend** : API RESTful construida con Node.js, Express y TypeScript.
 
-Validación de Datos: Reglas de validación en el backend para garantizar la integridad de los datos.
+- **Base de Datos Relacional**: Persistencia de datos gestionada con PostgreSQL.
 
-Entorno Contenerizado: Uso de Docker y Docker Compose para una configuración de desarrollo sencilla y consistente.
+- **Validación de Datos**: Reglas de validación en el frontend y en el backend para garantizar la integridad de los datos.
+
+- **Entorno Contenerizado**: Uso de Docker y Docker Compose para una configuración de desarrollo sencilla y consistente.
 
 ## 🛠️ Pila Tecnológica
 - **Frontend**: React, TypeScript, Vite, Axios, Tailwind CSS
@@ -131,4 +132,5 @@ npm run dev
 Abre tu navegador y visita http://localhost:5173.
 
 ¡Y eso es todo! Ahora deberías tener la aplicación completa ejecutándose localmente. El frontend en el puerto 5173 se comunicará con el backend que se ejecuta dentro de Docker en el puerto 3000.
+
 
