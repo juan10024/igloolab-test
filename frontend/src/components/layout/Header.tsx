@@ -7,9 +7,9 @@ import { useI18n } from '../../hooks/useI18n';
 import Logo from '../../assets/logo.png'
 
 /**
- * El encabezado principal de la aplicación.
- * Incluye título, y los selectores de tema, idioma y moneda.
- */
+* The main header of the application.
+* Includes the title, theme, language, and currency selectors.
+*/
 const Header: React.FC = () => {
     const { t } = useI18n();
     return (

@@ -3,7 +3,7 @@ import { useCurrency } from '../../hooks/useCurrency';
 import { currencies } from '../../config/CurrencyConfig';
 
 /**
- * Componente para cambiar la moneda de la aplicación.
+ * Component to change the application currency.
  */
 export const CurrencySwitcher: React.FC = () => {
   const { currency, setCurrency } = useCurrency();

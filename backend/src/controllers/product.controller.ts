@@ -1,121 +1,139 @@
-import type { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { Repository } from 'typeorm';
-import { validate } from 'class-validator';
+import { validate, isUUID } from 'class-validator';
 import { AppDataSource } from '../data-source';
 import { Product } from '../entities/Product';
 
 /**
- * Get a repository instance for Product.
- * If the AppDataSource is not initialized, try to initialize it once.
+ * Retrieves the repository for the Product entity.
+ * This function includes a defensive check to initialize the data source if it hasn't been already.
+ *
+ * @best_practice In a production application, the DataSource should be initialized once
+ * at the application's startup 
+ * to ensure a stable connection pool is ready before any requests are handled.
+ *
+ * @returns {Promise<Repository<Product>>} A promise that resolves to the Product repository.
+ * @throws {Error} Throws an error if the repository cannot be obtained.
  */
-async function getProductRepository(): Promise<Repository<Product>> {
+const getProductRepository = async (): Promise<Repository<Product>> => {
   try {
     if (!AppDataSource.isInitialized) {
-      // Attempt to initialize if not already initialized.
-      // This is defensive: in normal flow your index.ts should already initialize.
+      console.warn('DataSource was not initialized. Attempting to initialize now...');
       await AppDataSource.initialize();
     }
     return AppDataSource.getRepository(Product);
-  } catch (err) {
-    // Re-throw after logging so handlers can return a 500 to the client.
-    console.error('Failed to obtain Product repository:', err instanceof Error ? err.stack ?? err.message : err);
-    throw err;
+  } catch (error) {
+    console.error('Failed to get Product repository:', error);
+    // Re-throw the error to be caught by the global error handler or the controller's catch block.
+    throw new Error('Database connection error.');
   }
-}
+};
 
 /**
- * GET /api/products
- * Returns all products.
+ * A simple input sanitizer to remove potentially harmful HTML/JS characters.
+ * @param {string} input The string to sanitize.
+ * @returns {string} The sanitized string.
  */
-export const getProducts = async (req: Request, res: Response): Promise<Response> => {
+const sanitizeInput = (input: string): string => {
+    if (typeof input !== 'string') return '';
+    return input.replace(/<[^>]*>?/gm, ''); // Removes HTML tags
+};
+
+
+// --- Controller Functions ---
+
+/**
+ * @route   GET /api/products
+ * @desc    Get all products
+ * @access  Public
+ * @param   {Request} _req - Express request object (unused).
+ * @param   {Response} res - Express response object.
+ * @returns {Promise<Response>} A JSON response with all products or an error message.
+ */
+export const getProducts = async (_req: Request, res: Response): Promise<Response> => {
   try {
     const productRepository = await getProductRepository();
     const products = await productRepository.find();
+
     return res.status(200).json(products);
-  } catch (error: unknown) {
-    // Safe logging: print stack if it's an Error, otherwise log the raw object.
-    if (error instanceof Error) {
-      console.error('Error in getProducts:', error.stack ?? error.message);
-      return res.status(500).json({ message: error.message });
-    }
-    console.error('Unknown error in getProducts:', error);
-    return res.status(500).json({ message: 'Unknown server error' });
+  } catch (error) {
+    console.error('Error in getProducts:', error);
+    return res.status(500).json({ message: 'An unexpected error occurred on the server.' });
   }
 };
 
 /**
- * POST /api/products
- * Create a product.
- *
- * Expected JSON body: { name: string, description?: string, price: number }
+ * @route   POST /api/products
+ * @desc    Create a new product
+ * @access  Public
+ * @param   {Request} req - Express request object containing the product data in the body.
+ * @param   {Response} res - Express response object.
+ * @returns {Promise<Response>} A JSON response with the created product or a validation/error message.
  */
 export const createProduct = async (req: Request, res: Response): Promise<Response> => {
-
   try {
     const { name, description, price } = req.body;
 
-    // Basic request validation: required fields
-    if (!name || typeof name !== 'string') {
-      return res.status(400).json({ message: 'Invalid or missing "name" field' });
-    }
-
-    // Ensure price is a finite number
-    const parsedPrice = typeof price === 'number' ? price : Number.parseFloat(String(price));
-    if (!Number.isFinite(parsedPrice)) {
-      return res.status(400).json({ message: 'Invalid or missing "price" field. Must be a number.' });
-    }
-
-    const productRepository = await getProductRepository();
-
-    // Create entity instance and assign values
+    // 1. Instantiate the entity
     const product = new Product();
-    product.name = name;
-    product.description = typeof description === 'string' ? description : '';
-    product.price = parsedPrice;
+    product.name = sanitizeInput(name); // Sanitize string inputs
+    product.description = sanitizeInput(description);
+    product.price = price;
 
-    // Validate entity using class-validator - returns array of validation errors if any
+    // 2. Validate the entity using class-validator decorators defined in your Product entity.
+    // This centralizes validation rules on the entity itself.
     const errors = await validate(product);
     if (errors.length > 0) {
-      const formatted = errors.map(e => ({
-        field: e.property,
-        constraints: e.constraints
+      // Map errors to a more client-friendly format
+      const formattedErrors = errors.map(err => ({
+        field: err.property,
+        constraints: err.constraints,
       }));
-      console.warn('Validation failed for createProduct:', formatted);
-      return res.status(400).json({ message: 'Validation failed', errors: formatted });
+      return res.status(400).json({ message: 'Validation failed', errors: formattedErrors });
     }
 
-    const saved = await productRepository.save(product);
-    return res.status(201).json(saved);
-  } catch (error: unknown) {
-    // Log full stack if possible; otherwise log the raw object
-    if (error instanceof Error) {
-      console.error('Error saving product:', error.stack ?? error.message);
-      return res.status(500).json({ message: error.message });
-    }
-    console.error('Unknown error saving product:', error);
-    return res.status(500).json({ message: 'Unknown server error' });
+    // 3. Save the validated entity
+    const productRepository = await getProductRepository();
+    const newProduct = await productRepository.save(product);
+
+    return res.status(201).json(newProduct);
+  } catch (error) {
+    console.error('Error in createProduct:', error);
+    return res.status(500).json({ message: 'An unexpected error occurred on the server.' });
   }
 };
 
 /**
- * DELETE /api/products/:id
- * Delete specific product by id.
+ * @route   DELETE /api/products/:id
+ * @desc    Delete a product by its ID
+ * @access  Public
+ * @param   {Request} req - Express request object containing the ID as a URL parameter.
+ * @param   {Response} res - Express response object.
+ * @returns {Promise<Response>} A 204 No Content response on success or an error message.
  */
 export const deleteProduct = async (req: Request, res: Response): Promise<Response> => {
-  const { id } = req.params;
   try {
+    const { id } = req.params;
+
+    // --- Security & Validation ---
+    // Validate that the ID is in the correct format (e.g., UUID) before querying the database.
+    // This prevents malformed requests from hitting the DB layer.
+    if (!isUUID(id)) {
+        return res.status(400).json({ message: 'Invalid ID format. A valid UUID is required.' });
+    }
+
     const productRepository = await getProductRepository();
-    const result = await productRepository.delete(id);
-    if (result.affected === 0) {
-      return res.status(404).json({ message: `Product with ID ${id} not found` });
+    const deleteResult = await productRepository.delete(id);
+
+    // Check if any record was actually deleted.
+    if (deleteResult.affected === 0) {
+      return res.status(404).json({ message: `Product with ID ${id} not found.` });
     }
+
+    // Standard practice for successful DELETE operations is to return 204 No Content.
     return res.status(204).send();
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error('Error deleting product:', error.stack ?? error.message);
-      return res.status(500).json({ message: error.message });
-    }
-    console.error('Unknown error deleting product:', error);
-    return res.status(500).json({ message: 'Unknown server error' });
+  } catch (error) {
+    console.error(`Error in deleteProduct for ID ${req.params.id}:`, error);
+    return res.status(500).json({ message: 'An unexpected error occurred on the server.' });
   }
 };

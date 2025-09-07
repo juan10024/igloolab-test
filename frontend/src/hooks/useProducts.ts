@@ -4,8 +4,8 @@ import type { Product, NotificationType } from '../types';
 import { useI18n } from './useI18n';
 
 /**
- * Hook personalizado para manejar toda la lógica de productos.
- */
+* Custom hook to handle all product logic.
+*/
 export const useProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);

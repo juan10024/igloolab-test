@@ -1,14 +1,14 @@
-// Este archivo centraliza la configuración de las monedas para que sea fácilmente escalable.
+// This file centralizes currency configuration so it's easily scalable.
 
 export type Currency = 'USD' | 'COP';
 
 interface CurrencyConfig {
   symbol: string;
-  rate: number; // Tasa de conversión con respecto a la moneda base (USD)
+  rate: number; // Conversion rate from the base currency (USD)
   format: (value: number) => string;
 }
 
-// USD es la moneda base. Todos los precios se almacenan en USD.
+// USD is the base currency. All prices are stored in USD.
 export const currencies: Record<Currency, CurrencyConfig> = {
   USD: {
     symbol: '$',
@@ -17,7 +17,7 @@ export const currencies: Record<Currency, CurrencyConfig> = {
   },
   COP: {
     symbol: '$',
-    rate: 4000, // Tasa de ejemplo. En una app real, esto vendría de una API.
+    rate: 4120, // Example rate. In a real app, this would come from an API.
     format: (value) => `$${value.toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} COP`,
   },
 };

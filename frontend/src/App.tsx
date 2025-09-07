@@ -5,10 +5,19 @@ import Notification from './components/common/Notification';
 import ConfirmModal from './components/common/ConfirmModal';
 import { useProducts } from './hooks/useProducts';
 import { useI18n } from './hooks/useI18n';
+import { useKeepAlive } from './hooks/useKeepAlive';
 
 
 
 function App() {
+  // Get the API base URL from environment variables.
+  const apiUrl = import.meta.env.VITE_REACT_APP_URL;
+  const keepAliveUrl = `${apiUrl}/api/ping`;
+
+  // Call the hook to start the keep-alive process.
+  // It will run only once when the App component is mounted.
+  useKeepAlive(keepAliveUrl);
+
   const {
     products,
     isLoading,

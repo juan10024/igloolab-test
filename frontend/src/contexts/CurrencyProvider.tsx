@@ -10,7 +10,7 @@ export const CurrencyContext = createContext<CurrencyContextType | undefined>(un
 
 export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currency, setCurrencyState] = useState<Currency>(() => {
-    // Carga la moneda desde localStorage o usa 'USD' por defecto
+    // Load currency from localStorage or use 'USD' by default
     const storedCurrency = localStorage.getItem('currency') as Currency;
     return storedCurrency || 'USD';
   });
@@ -19,7 +19,7 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setCurrencyState(newCurrency);
   };
 
-  // Guarda la moneda seleccionada en localStorage cada vez que cambia
+  // Save the selected currency to localStorage every time it changes
   useEffect(() => {
     localStorage.setItem('currency', currency);
   }, [currency]);

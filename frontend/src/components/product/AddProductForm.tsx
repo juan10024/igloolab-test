@@ -27,7 +27,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onAdd, isLoading }) => 
     switch (name) {
         case 'name':
             if (!value.trim()) return t('validation_name_required');
-            // Updated validation: now only checks for minimum length, allowing any characters.
+           
             if (value.trim().length < 4) return t('validation_name_invalid');
             break;
         case 'description':
@@ -53,7 +53,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onAdd, isLoading }) => 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target as { name: FormFields, value: string };
     setFormData(prev => ({...prev, [name]: value}));
-    // Optional: Clear the error as soon as the user starts typing again
+    
     if (errors[name]) {
         setErrors(prev => ({...prev, [name]: undefined}));
     }

@@ -3,9 +3,9 @@ import { CurrencyContext } from '../contexts/CurrencyProvider';
 import { currencies } from '../config/CurrencyConfig';
 
 /**
- * Hook personalizado para acceder al contexto de la moneda.
- * Proporciona la moneda actual, una función para cambiarla y utilidades de formato.
- */
+* Custom hook to access the currency context.
+* Provides the current currency, a function to change it, and formatting utilities.
+*/
 export const useCurrency = () => {
   const context = useContext(CurrencyContext);
   if (!context) {
