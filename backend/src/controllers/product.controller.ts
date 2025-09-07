@@ -50,7 +50,6 @@ export const getProducts = async (req: Request, res: Response): Promise<Response
  * Expected JSON body: { name: string, description?: string, price: number }
  */
 export const createProduct = async (req: Request, res: Response): Promise<Response> => {
-  console.log('Incoming create product request body:', req.body);
 
   try {
     const { name, description, price } = req.body;
