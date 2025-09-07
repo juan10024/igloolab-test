@@ -1,16 +1,30 @@
 version: '3.8'
 
 services:
-  postgres-db:
-    image: postgres:15-alpine
-    container_name: igloolab_postgres
+  # Servicio de la aplicación Node.js
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - .env
+    depends_on:
+      - db
+    command: npm run dev
+
+  # Servicio de la base de datos PostgreSQL
+  db:
+    image: postgres:15
     restart: always
     environment:
+      POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_DATABASE}
     ports:
-      - "${DB_PORT}:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
