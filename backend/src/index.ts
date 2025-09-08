@@ -1,54 +1,70 @@
+/**
+ * @fileoverview Main entry point for the Express application.
+ * @module index
+ * @requires reflect-metadata
+ * @requires express
+ * @requires cors
+ * @requires dotenv
+ * @requires ./data-source
+ * @requires ./routes/product.routes
+ * @requires ./routes/ping.router
+ */
+
 import 'reflect-metadata';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import 'dotenv/config';
-import { AppDataSource } from './data-source'
+import { AppDataSource } from './data-source';
 import productRoutes from './routes/product.routes';
+import pingRouter from './routes/ping.router';
 
 /**
- * Main application function.
- * Initializes the database connection, configures the Express server,
- * and starts listening for incoming requests.
+ * The main server function.
+ * Initializes the database connection, configures the Express server middlewares and routes,
+ * and starts listening for incoming requests on the specified port.
  */
 const main = async () => {
-    // Initialize database connection
+    // --- Database Initialization ---
     try {
         await AppDataSource.initialize();
-        console.log("Data Source has been initialized!");
-    } catch (err) {
-        console.error("Error during Data Source initialization:", err);
-        process.exit(1); // Exit process with failure
+        console.log("Data Source has been initialized successfully.");
+    } catch (error) {
+        console.error("Error during Data Source initialization:", error);
+        process.exit(1); // Exit process with a failure code.
     }
 
     const app = express();
 
-    // --- Middlewares ---
-    // Enable Cross-Origin Resource Sharing for all routes
+    // --- Core Middlewares ---
+    // Enable Cross-Origin Resource Sharing (CORS) for all origins.
     app.use(cors());
-    // Enable the express.json middleware to parse JSON-formatted request bodies
+    // Parse incoming request bodies in JSON format.
     app.use(express.json());
 
-    // --- Routes ---
-    app.get('/api', (req, res) => {
-        res.status(200).json({ message: 'API is running successfully!' });
-    });
+    // --- Application Routes ---
+    // Health check and keep-alive route, mounted at the root.
+    app.use('/', pingRouter);
+    // API-specific routes, prefixed with '/api'.
     app.use('/api/products', productRoutes);
 
-    // --- Error Handling Middleware ---
-    // This middleware catches any errors that occur in the route handlers
-    app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-        console.error('Unhandled error:', err && (err.stack || err));
-        const isProd = process.env.NODE_ENV === 'production';
+    // --- Global Error Handling Middleware ---
+    // This final middleware catches any unhandled errors from the routing pipeline.
+    app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+        console.error('Unhandled Application Error:', err.stack);
+        const isProduction = process.env.NODE_ENV === 'production';
+        
         res.status(500).json({
-            message: isProd ? 'Something went wrong on the server.' : (err?.message || 'Unknown error'),
-            ...(isProd ? {} : { stack: err?.stack })
+            message: isProduction ? 'An unexpected server error occurred.' : err.message,
+            stack: isProduction ? undefined : err.stack
         });
     });
-
+    
+    // --- Server Activation ---
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
-        console.log(`Server is running on http://localhost:${PORT}`);
+        console.log(`Server is running and listening on port ${PORT}`);
     });
 };
 
+// Execute the main function to start the server.
 main();
