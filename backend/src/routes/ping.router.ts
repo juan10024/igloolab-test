@@ -1,20 +1,30 @@
+/**
+ * @fileoverview Express router for health check endpoints.
+ * @module routes/ping
+ * @requires express
+ */
+
 import { Router, Request, Response } from 'express';
 
-// Este router se dedicará exclusivamente a las rutas que no interactúan
-// con la base de datos, como los health checks.
+// Create a Router instance to define the "ping" routes.
 const pingRouter = Router();
 
 /**
- * @route GET /ping
- * @description Respond with a 'pong' message and a status of 200.
- * @access Public
-* This route does not perform any operations itself
-* asynchronously, does not query the database, and does not consume significant resources.
-* Its sole purpose is to confirm that the server is up and respond
-* as quickly as possible, keeping the service available since it is free.
+ * @route   GET /ping
+ * @desc    Health check endpoint to keep the server alive.
+ * @access  Public
+ * @returns {object} A JSON object with a 'pong' message.
+ *
+ * @description
+ * This route is designed to be extremely lightweight and fast. Its sole purpose
+ * is to respond to requests to confirm that the server is online and running.
+ * It is ideal for:
+ * 1. "Keep-alive" services, as implemented in the frontend.
+ * 2. Health checks from load balancers or monitoring services.
  */
 pingRouter.get('/ping', (_req: Request, res: Response) => {
-  // A response is sent in JSON format.
+  // Send a response with a 200 (OK) status and a simple JSON body.
+
   res.status(200).json({ message: 'pong' });
 });
 

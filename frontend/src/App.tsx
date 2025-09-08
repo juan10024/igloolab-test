@@ -1,5 +1,5 @@
 /**
- * @fileoverview The main component that orchestrates the entire application.
+ * @fileoverview Main component that orchestrates the entire application.
  * @module App
  * @requires react
  * @requires ./components/product/AddProductForm
@@ -21,12 +21,16 @@ import { useProducts } from './hooks/useProducts';
 import { useI18n } from './hooks/useI18n';
 import { useKeepAlive } from './hooks/useKeepAlive';
 
-
-
+/**
+ * The root component of the application.
+ * @returns {JSX.Element} The rendered App component.
+ */
 function App() {
-  // Get the API base URL from environment variables.
   const apiUrl = import.meta.env.VITE_REACT_APP_URL;
-  const keepAliveUrl = `${apiUrl}/ping`;
+
+  // Build the server's base URL, removing the '/api' suffix if present.
+  const baseUrl = apiUrl.endsWith('/api') ? apiUrl.slice(0, -4) : apiUrl;
+  const keepAliveUrl = `${baseUrl}/ping`;
 
   // Call the hook to start the keep-alive process.
   // It will run only once when the App component is mounted.
